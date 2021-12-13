@@ -1,5 +1,8 @@
 pipeline {
   agent { label 'linux' }
+  tools {
+    maven 'mvn-3.6.3'
+  }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
@@ -19,20 +22,18 @@ pipeline {
     
     stage ('OWASP Dependency-Check Vulnerabilities') {
       steps {
-        sh 'mvn dependency-check:check'
+        withMaven(maven : 'mvn-3.6.3') {
+          sh 'mvn dependency-check:check'
+        }
         dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
       }
     }
     
-    
-    stage('Login') {
-      steps {
-        sh 'echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com'
-      }
-    }
     stage('Push to Heroku registry') {
       steps {
         sh '''
+          echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+          
           docker tag darinpope/java-web-app:latest registry.heroku.com/$APP_NAME/web
           docker push registry.heroku.com/$APP_NAME/web
         '''
