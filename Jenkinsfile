@@ -16,6 +16,15 @@ pipeline {
         sh 'docker build -t darinpope/java-web-app:latest .'
       }
     }
+    
+    stage ('OWASP Dependency-Check Vulnerabilities') {
+      steps {
+        sh 'mvn dependency-check:check'
+        dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+      }
+    }
+    
+    
     stage('Login') {
       steps {
         sh 'echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com'
