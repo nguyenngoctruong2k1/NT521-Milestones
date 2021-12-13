@@ -1,5 +1,6 @@
 pipeline {
-  agent { label 'linux' }
+  // agent { label 'linux' }
+  agent {dockerfile = tur}
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
@@ -12,8 +13,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker --version'
-        // sh 'docker build -t darinpope/java-web-app:latest .'
+        sh 'docker build -t darinpope/java-web-app:latest .'
       }
     }
     stage('Login') {
