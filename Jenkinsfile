@@ -12,8 +12,8 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker --version'
-        // sh 'docker build -t darinpope/java-web-app:latest .'
+        // sh 'docker --version'
+        sh 'docker build -t darinpope/java-web-app:latest .'
       }
     }
     stage('Login') {
