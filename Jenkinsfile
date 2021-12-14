@@ -30,21 +30,8 @@ pipeline {
             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
         }
     }
-    stage('Anchore analyse') {
-      steps {
-        writeFile file: 'anchore_images', text: 'darinpope/java-web-app:latest'
-        anchore name: 'anchore_images'
-      }
-    }
-//     stage ('OWASP Dependency-Check Vulnerabilities') {
-//       steps {
-//         withMaven(maven: 'mvn-3.6.3'){
-//           sh 'mvn clean'
-//           sh 'mvn -fn dependency-check:check'
-//         }
-//         dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-//       }
-//     }
+
+
     
     stage('Push to Heroku registry') {
       steps {
