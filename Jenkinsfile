@@ -21,15 +21,10 @@ pipeline {
     }
     
     stage ('OWASP Dependency-Check Vulnerabilities') {
-      agent { 
-        docker{
-          image 'owasp/dependency-check'
-          agrs '-u 0:0 -v /tmp:root/.cache'
-        }
-      }
       steps {
         withMaven(maven: 'mvn-3.6.3'){
-          sh 'mvn clean -fn dependency-check:check'
+          sh 'mvn clean'
+          sh 'mvn -fn dependency-check:check'
         }
         dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
       }
