@@ -30,6 +30,12 @@ pipeline {
             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
         }
     }
+    stage('Anchore analyse') {
+      steps {
+        writeFile file: 'anchore_images', text: 'darinpope/java-web-app:latest'
+        anchore name: 'anchore_images'
+      }
+    }
 //     stage ('OWASP Dependency-Check Vulnerabilities') {
 //       steps {
 //         withMaven(maven: 'mvn-3.6.3'){
