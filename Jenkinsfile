@@ -19,16 +19,26 @@ pipeline {
         sh 'docker build -t darinpope/java-web-app:latest .'
       }
     }
-    
     stage ('OWASP Dependency-Check Vulnerabilities') {
-      steps {
-        withMaven(maven: 'mvn-3.6.3'){
-          sh 'mvn clean'
-          sh 'mvn -fn dependency-check:check'
+        steps {
+            dependencyCheck additionalArguments: ''' 
+                -o "./" 
+                -s "./"
+                -f "ALL" 
+                --prettyPrint''', odcInstallation: 'OWASP-DC'
+
+            dependencyCheckPublisher pattern: 'dependency-check-report.xml'
         }
-        dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-      }
     }
+//     stage ('OWASP Dependency-Check Vulnerabilities') {
+//       steps {
+//         withMaven(maven: 'mvn-3.6.3'){
+//           sh 'mvn clean'
+//           sh 'mvn -fn dependency-check:check'
+//         }
+//         dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+//       }
+//     }
     
     stage('Push to Heroku registry') {
       steps {
