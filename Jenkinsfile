@@ -41,6 +41,13 @@ pipeline {
         '''
       }
     }
+    stage('Anchore analyse') {
+      steps {
+        writeFile file: 'anchore_images', text: 'registry.heroku.com/$APP_NAME/web'
+        anchore name: 'anchore_images'
+      }
+    }
+    
     stage('Release the image') {
       steps {
         sh '''
