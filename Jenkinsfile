@@ -14,7 +14,7 @@ pipeline {
     stage('Build') {
       steps {
         // sh 'docker --version'
-        sh 'docker build -t darinpope/java-web-app:latest .'
+        sh 'docker build -t butterflies/milestones521:latest .'
       }
     }
     
@@ -33,7 +33,7 @@ pipeline {
     stage('Anchore analyse') {
       steps {
         sh '''
-          curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -d Dockerfile darinpope/java-web-app:latest
+          curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -d Dockerfile butterflies/milestones521:latest
         '''
       }
     }
@@ -43,7 +43,7 @@ pipeline {
         sh '''
           echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
           
-          docker tag darinpope/java-web-app:latest registry.heroku.com/$APP_NAME/web
+          docker tag butterflies/milestones521:latest registry.heroku.com/$APP_NAME/web
           docker push registry.heroku.com/$APP_NAME/web
         '''
       }
