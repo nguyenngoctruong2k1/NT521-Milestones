@@ -1,8 +1,6 @@
 pipeline {
   agent { label 'linux' }
-  tools {
-    maven 'mvn-3.6.3'
-  }
+
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
