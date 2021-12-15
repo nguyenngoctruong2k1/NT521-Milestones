@@ -17,19 +17,26 @@ pipeline {
         sh 'docker build -t darinpope/java-web-app:latest .'
       }
     }
-    stage ('OWASP Dependency-Check Vulnerabilities') {
-        steps {
-            dependencyCheck additionalArguments: ''' 
-                -o "./" 
-                -s "./"
-                -f "ALL" 
-                --prettyPrint''', odcInstallation: 'OWASP-DC'
+    
+//     stage ('OWASP Dependency-Check Vulnerabilities') {
+//         steps {
+//             dependencyCheck additionalArguments: ''' 
+//                 -o "./" 
+//                 -s "./"
+//                 -f "ALL" 
+//                 --prettyPrint''', odcInstallation: 'OWASP-DC'
 
-            dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-        }
+//             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+//         }
+//     }
+    
+    stage('Anchore analyse') {
+      steps {
+        sh '''
+          curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -d Dockerfile darinpope/java-web-app:latest
+        '''
+      }
     }
-
-
     
     stage('Push to Heroku registry') {
       steps {
@@ -38,13 +45,6 @@ pipeline {
           
           docker tag darinpope/java-web-app:latest registry.heroku.com/$APP_NAME/web
           docker push registry.heroku.com/$APP_NAME/web
-        '''
-      }
-    }
-    stage('Anchore analyse') {
-      steps {
-        sh '''
-          curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -d Dockerfile darinpope/java-web-app:latest
         '''
       }
     }
