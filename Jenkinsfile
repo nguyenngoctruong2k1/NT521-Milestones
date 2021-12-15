@@ -43,7 +43,7 @@ pipeline {
     }
     stage('Anchore analyse') {
       steps {
-        writeFile file: 'anchore_images', text: 'registry.heroku.com/$APP_NAME/web'
+        writeFile file: 'anchore_images', text: 'docker.io/darinpope/java-web-app:latest'
         anchore name: 'anchore_images'
       }
     }
