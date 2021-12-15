@@ -15,6 +15,6 @@ public class DemoApplication {
 
 	@RequestMapping("/")
   public String home() {
-    return "Hello Milestones - Butterflies";
+    return "Hello Butterflies";
   }
 }
