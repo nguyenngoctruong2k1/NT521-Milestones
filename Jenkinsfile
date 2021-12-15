@@ -44,7 +44,7 @@ pipeline {
     stage('Anchore analyse') {
       steps {
         sh '''
-          curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -d Dockerfile -b .anchore_policy.json darinpope/java-web-app:latest
+          curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -d Dockerfile darinpope/java-web-app:latest
         '''
       }
     }
