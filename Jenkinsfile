@@ -43,8 +43,10 @@ pipeline {
     }
     stage('Anchore analyse') {
       steps {
-        writeFile file: 'anchore_images', text: 'docker.io/darinpope/java-web-app:latest'
-        anchore name: 'anchore_images'
+//         writeFile file: 'anchore_images', text: 'docker.io/darinpope/java-web-app:latest'
+//         anchore name: 'anchore_images'
+        sh 'apk add bash curl'
+        sh 'curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -d Dockerfile -b .anchore_policy.json darinpope/java-web-app:latest'
       }
     }
     
